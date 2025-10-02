@@ -33,7 +33,7 @@ def funzione_filtrata():
     data_array = np.frombuffer(data_bytes, dtype=np.int32).reshape(-1, 2).copy()
 
     # Applica i filtri
-    filtered_audio = audioFiltering(data_array, filter_data, 2)
+    filtered_audio = audioFiltering(data_array, filter_data_left, filter_data_rigth)
 
     # Scrivi sull'output
     stream.write(filtered_audio.astype(np.int32).tobytes())
