@@ -2,6 +2,7 @@ import numpy as np
 import pyaudio
 import threading
 from loadData import loadData
+from flask import Flask, render_template_string
 from audioFiltering import audioFiltering
 
 CHUNK = 128
@@ -41,29 +42,60 @@ def funzione_filtrata():
 # Variabile per la funzione corrente, inizialmente pass-through
 funzione_corrente = funzione_pass_through
 
-# Thread per input utente 
-def input_thread():
+
+app = Flask(__name__)
+
+HTML_PAGE = """
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Audio Control</title>
+</head>
+<body>
+    <div align= center>
+  <h1>Controllo Audio</h1>
+  <p>Modalità corrente: <b>{{ mode }}</b></p>
+  <form action="/mode/pass" method="post">
+    <button type="submit">Pass-Through</button>
+  </form>
+  <form action="/mode/filter" method="post">
+    <button type="submit">Filtrato</button>
+  </form>
+  </div>
+</body>
+</html>
+"""
+
+@app.route("/")
+def index():
+    return render_template_string(HTML_PAGE, mode=("Filtrato" if funzione_corrente == funzione_filtrata else "Pass-Through"))
+
+@app.route("/mode/pass", methods=["POST"])
+def set_pass():
     global funzione_corrente
-    while True:
-        user_input = input("Premi 'f' per filtrare, 'p' per pass-through: ").strip()
-        if user_input == 'f':
-            funzione_corrente = funzione_filtrata
-            print("Modalità FILTRATA attivata")
-        elif user_input == 'p':
-            funzione_corrente = funzione_pass_through
-            print("Modalità PASS-THROUGH attivata")
+    funzione_corrente = funzione_pass_through
+    return index()
 
-# Avvio thread per input
-thread = threading.Thread(target=input_thread, daemon=True)
-thread.start()
+@app.route("/mode/filter", methods=["POST"])
+def set_filter():
+    global funzione_corrente
+    funzione_corrente = funzione_filtrata
+    return index()
 
-# Loop principale
+# Thread Flask
+def run_flask():
+    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)
+
+# Avvia server web
+flask_thread = threading.Thread(target=run_flask, daemon=True)
+flask_thread.start()
+
+# Ciclo principale audio
 try:
     while True:
         funzione_corrente()
 except KeyboardInterrupt:
-    print("\nInterruzione manuale ricevuta. Chiudo stream...")
-
+    print("\nStop manuale.")
 finally:
     stream.stop_stream()
     stream.close()
