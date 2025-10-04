@@ -1,14 +1,17 @@
 import numpy as np
 import pyaudio
 import threading
+import scipy
 from loadData import loadData
 from flask import Flask, render_template_string
 from audioFiltering import audioFiltering
 from filterCreation import build_sos
-import scipy
+from iir import IIR
 
-CHUNK = 256
+
+CHUNK = 1024
 RATE = 48000
+
 
 # Inizializza PyAudio
 p = pyaudio.PyAudio()
@@ -18,20 +21,30 @@ stream = p.open(format=pyaudio.paInt32,
                 input=True,
                 output=True,
                 input_device_index=2,    
-                output_device_index=1,   
+                output_device_index=2,   
                 frames_per_buffer=CHUNK)
 
 # Carica i dati del filtro
 filter_data_left = loadData("L")
 filter_data_right = loadData("R")
+filter_data = loadData("_LR")
 
 #Creo i filtri
-sos_left, sos_right = build_sos(filter_data_left, filter_data_right)
+#sos_left, sos_right = build_sos(filter_data_left, filter_data_right)
+
+iir_left = IIR(2, RATE)
+iir_right = IIR(2, RATE)
+
+iir_stereo = IIR(2, RATE)
+
+#aggiungo filtri sos
+#build_sos(filter_data_left, filter_data_right, iir_left, iir_right)
+build_sos(filter_data, iir_stereo)
 
 #Inizzializzo i filtri
 #A typical use of this function is to set the initial state so that the output of the filter starts at the same value as the first element of the signal to be filtered.
-zi_left = scipy.signal.sosfilt_zi(sos_left)
-zi_right = scipy.signal.sosfilt_zi(sos_right)
+#zi_left = scipy.signal.sosfilt_zi(sos_left)
+#zi_right = scipy.signal.sosfilt_zi(sos_right)
 
 
 def funzione_pass_through():
@@ -40,15 +53,16 @@ def funzione_pass_through():
 
 def funzione_filtrata():
     data_bytes = stream.read(CHUNK, exception_on_overflow=False)
-    
-    # Converti bytes in array NumPy scrivibile
-    data_array = np.frombuffer(data_bytes, dtype=np.int32).reshape(-1, 2).copy()
 
-    # Applica i filtri
-    filtered_audio = audioFiltering(data_array, zi_left, zi_right, sos_left, sos_right)
+    # Converti in float32
+    data_array = np.frombuffer(data_bytes, dtype=np.int32).reshape(-1, 2).astype(np.float32)
 
-    # Scrivi sull'output
+    filtered_audio = iir_stereo.filter(data_array)
+    # Scrivi sullo stream
     stream.write(filtered_audio.astype(np.int32).tobytes())
+
+
+
 
 # Variabile per la funzione corrente, inizialmente pass-through
 funzione_corrente = funzione_pass_through
@@ -92,6 +106,7 @@ def set_filter():
     global funzione_corrente
     funzione_corrente = funzione_filtrata
     return index()
+
 
 # Thread Flask
 def run_flask():
