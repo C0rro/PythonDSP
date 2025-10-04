@@ -4,8 +4,10 @@ import threading
 from loadData import loadData
 from flask import Flask, render_template_string
 from audioFiltering import audioFiltering
+from filterCreation import build_sos
+import scipy
 
-CHUNK = 128
+CHUNK = 256
 RATE = 48000
 
 # Inizializza PyAudio
@@ -15,13 +17,22 @@ stream = p.open(format=pyaudio.paInt32,
                 rate=RATE,
                 input=True,
                 output=True,
-                input_device_index=0,    
-                output_device_index=2,   
+                input_device_index=2,    
+                output_device_index=1,   
                 frames_per_buffer=CHUNK)
 
 # Carica i dati del filtro
 filter_data_left = loadData("L")
-filter_data_rigth = loadData("R")
+filter_data_right = loadData("R")
+
+#Creo i filtri
+sos_left, sos_right = build_sos(filter_data_left, filter_data_right)
+
+#Inizzializzo i filtri
+#A typical use of this function is to set the initial state so that the output of the filter starts at the same value as the first element of the signal to be filtered.
+zi_left = scipy.signal.sosfilt_zi(sos_left)
+zi_right = scipy.signal.sosfilt_zi(sos_right)
+
 
 def funzione_pass_through():
     data = stream.read(CHUNK, exception_on_overflow=False)
@@ -34,7 +45,7 @@ def funzione_filtrata():
     data_array = np.frombuffer(data_bytes, dtype=np.int32).reshape(-1, 2).copy()
 
     # Applica i filtri
-    filtered_audio = audioFiltering(data_array, filter_data_left, filter_data_rigth)
+    filtered_audio = audioFiltering(data_array, zi_left, zi_right, sos_left, sos_right)
 
     # Scrivi sull'output
     stream.write(filtered_audio.astype(np.int32).tobytes())

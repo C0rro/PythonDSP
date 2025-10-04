@@ -1,6 +1,6 @@
 
 def loadData(channel):
-    nome_file = "Esempio_filtri_REW/filtro" + channel + ".txt"
+    nome_file = "Filtro_kali/Filtro" + channel + ".txt"
     dati_clean = []
     with open(nome_file, "r") as f:
         dati_grezzi = f.readlines()
