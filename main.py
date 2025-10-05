@@ -27,7 +27,7 @@ stream = p.open(format=pyaudio.paInt32,
 # Carica i dati del filtro
 filter_data_left = loadData("L")
 filter_data_right = loadData("R")
-filter_data = loadData("_LR")
+filter_data = loadData("2_LR")
 
 #Creo i filtri
 #sos_left, sos_right = build_sos(filter_data_left, filter_data_right)
