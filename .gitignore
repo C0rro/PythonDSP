@@ -1,0 +1,20 @@
+# --- File temporanei e cache Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+
+# --- File temporanei di sistema ---
+.DS_Store
+Thumbs.db
+
+
+# --- Dataset o filtri audio ---
+Esempio_filtri_REW/
+audio_sample/
+file_esempio/
+*.wav
+*.mp3
+*.npy
+*.npz
