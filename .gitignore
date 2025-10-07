@@ -12,6 +12,7 @@ Thumbs.db
 
 # --- Dataset o filtri audio ---
 Esempio_filtri_REW/
+Filtri/
 audio_sample/
 file_esempio/
 *.wav
