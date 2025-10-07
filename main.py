@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import pyaudio
 import threading
@@ -181,7 +182,8 @@ def set_filter():
 @app.route("/stop", methods=["POST"])
 def stop_audio():
     global audio_running, stream, p
-    audio_running = False  
+    audio_running = False 
+    time.sleep(0.2) 
 
     # Chiudi stream in sicurezza
     try:
@@ -204,6 +206,8 @@ def loop_audio():
     global funzione_corrente, stream, chunk, iir_stereo
     try:
         while audio_running:
+            if stream is None:
+                break
             if funzione_corrente == funzione_pass_through:
                 funzione_pass_through(stream, chunk)
             else:
@@ -219,6 +223,6 @@ def loop_audio():
 
 # Thread Flask
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=False)
 
 
