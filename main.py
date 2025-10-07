@@ -71,6 +71,14 @@ start_page = """
 <html>
 <head>
   <title>Audio Setup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 1rem; padding: 10px; }
+    h1 { font-size: 1.5rem; text-align: center; }
+    form { max-width: 400px; margin: auto; }
+    input, select, button { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; font-size: 1rem; }
+    button { cursor: pointer; }
+  </style>
 </head>
 <body>
   <div align="center">
@@ -116,6 +124,14 @@ on_off_page = """
 <html>
 <head>
   <title>Audio Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 1rem; padding: 10px; }
+    h1 { font-size: 1.5rem; text-align: center; }
+    form { max-width: 400px; margin: auto; }
+    input, select, button { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; font-size: 1rem; }
+    button { cursor: pointer; }
+  </style>
 </head>
 <body>
     <div align= center>
@@ -223,6 +239,6 @@ def loop_audio():
 
 # Thread Flask
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5001, debug=False)
 
 
