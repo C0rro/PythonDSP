@@ -49,7 +49,7 @@ pip install numpy pyaudio flask
    python main.py
    
 6. **Configurazione e controllo tramite web**  
-   - Aprire un browser e navigare su: `http://127.0.0.1:5000`  
+   - Aprire un browser e navigare su: http://indirizo_ip_del_dispositivo:5000
    - Selezionare i dispositivi audio di input e output  
    - Scegliere il file dei filtri dalla cartella `Filtri/`  
    - Impostare il buffer size (chunk) e il sample rate desiderati  
