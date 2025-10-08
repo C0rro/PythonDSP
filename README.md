@@ -1,6 +1,6 @@
 # DSP Audio Raspberry Pi
 
-Un **DSP audio in tempo reale** per Raspberry Pi, progettato per correggere acusticamente impianti audio professionali tramite filtri IIR calcolati con **REW**.
+Un **DSP audio** progettato per correggere acusticamente impianti audio professionali tramite filtri IIR calcolati con **REW**.
 
 ---
 
@@ -19,12 +19,12 @@ Un **DSP audio in tempo reale** per Raspberry Pi, progettato per correggere acus
 
 ## Requisiti
 
-- Raspberry Pi (o qualsiasi computer Linux/Mac/Windows per test)  
+- Raspberry Pi (o qualsiasi computer Linux/Mac/Windows)  
 - Python 3.10+  
 - Librerie Python:
 
 ```bash
-pip install numpy pyaudio flask
+pip install numpy pyaudio flask scipy
 ```
 
 
@@ -49,7 +49,7 @@ pip install numpy pyaudio flask
    python main.py
    
 6. **Configurazione e controllo tramite web**  
-   - Aprire un browser e navigare su: http://indirizo_ip_del_dispositivo:5000
+   - Aprire un browser e navigare su: http://indirizo_ip_del_dispositivo:5001 (o modificare la porta con una non in uso)
    - Selezionare i dispositivi audio di input e output  
    - Scegliere il file dei filtri dalla cartella `Filtri/`  
    - Impostare il buffer size (chunk) e il sample rate desiderati  
