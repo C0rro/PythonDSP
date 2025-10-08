@@ -4,7 +4,6 @@ import pyaudio
 import threading
 from loadData import loadData, get_files_name
 from flask import Flask, render_template_string, request, redirect, url_for
-
 from filterCreation import build_sos
 from iir import IIR
 from idAudio import stampa_id
@@ -13,7 +12,7 @@ def inizializzo_filtri(file_name):
 
     global rate
 
-    # Carica i dati del filtro
+    # Carico i dati del filtro
     filter_data = loadData(file_name)
 
     #Creo oggetto IIR
@@ -38,17 +37,20 @@ def apertura_stream_audio(id_in, id_out, chunk, rate):
     
 
 def funzione_pass_through(stream, chunk):
+    #carico dati sul buffer
     data = stream.read(chunk, exception_on_overflow=False)
+    # Scriv sullo stream
     stream.write(data)
 
 def funzione_filtrata(stream, chunk, iir_stereo):
+    #carico dati sul buffer
     data_bytes = stream.read(chunk, exception_on_overflow=False)
 
-    # Converti in float32
+    # Converto in float32
     data_array = np.frombuffer(data_bytes, dtype=np.int32).reshape(-1, 2).astype(np.float32)
 
     filtered_audio = iir_stereo.filter(data_array)
-    # Scrivi sullo stream
+    # Scriv sullo stream
     stream.write(filtered_audio.astype(np.int32).tobytes())
 
 
@@ -151,6 +153,7 @@ on_off_page = """
 </html>
 """
 
+# Pagina principale
 @app.route("/")
 def index():
     input_devices, output_devices = stampa_id()
@@ -158,7 +161,7 @@ def index():
     
     return render_template_string(start_page, input_devices=input_devices, output_devices=output_devices, files=files)
 
-
+# Pagina form inizializzazione stream
 @app.route("/start", methods=["POST"])
 def start():
     global p, stream, chunk, rate, iir_stereo, audio_running
@@ -178,23 +181,26 @@ def start():
 
     return redirect(url_for("control"))
 
-
+# Pagina principale stream
 @app.route("/control")
 def control():
     return render_template_string(on_off_page, mode=("Filtrato" if funzione_corrente == funzione_filtrata else "Pass-Through"))
 
+# Avvio pass through
 @app.route("/mode/pass", methods=["POST"])
 def set_pass():
     global funzione_corrente
     funzione_corrente = funzione_pass_through
     return redirect(url_for("control"))
 
+# Avvio filtro
 @app.route("/mode/filter", methods=["POST"])
 def set_filter():
     global funzione_corrente
     funzione_corrente = funzione_filtrata
     return redirect(url_for("control"))
 
+# Fermo thread loop audio e torno sulla pagina principale di inizializzazione
 @app.route("/stop", methods=["POST"])
 def stop_audio():
     global audio_running, stream, p
@@ -217,7 +223,7 @@ def stop_audio():
 
 
 
-#main loop applicazione
+# main loop applicazione
 def loop_audio():
     global funzione_corrente, stream, chunk, iir_stereo
     try:
@@ -237,7 +243,7 @@ def loop_audio():
         if p:
             p.terminate()
 
-# Thread Flask
+# Avvio Flask
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001, debug=False)
 

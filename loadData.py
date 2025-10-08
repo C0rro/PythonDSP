@@ -1,5 +1,6 @@
 import os
 
+# Funzione per la lettura dei file presenti nella cartella Filtri
 def get_files_name():
     folder = "Filtri"
     files = [
@@ -8,6 +9,7 @@ def get_files_name():
     ]
     return files
 
+# Funzione per caricare e formattare dati dal filtro
 def loadData(filter_name):
     nome_file = "Filtri/" + filter_name 
     dati_clean = []
