@@ -24,7 +24,7 @@ Un **DSP audio** progettato per correggere acusticamente impianti audio professi
 - Librerie Python:
 
 ```bash
-pip install numpy pyaudio flask scipy
+pip install -r requirement.txt
 ```
 
 
