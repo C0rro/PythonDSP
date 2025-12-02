@@ -13,7 +13,7 @@ Un **DSP audio** progettato per correggere acusticamente impianti audio professi
   - Selezione dei dispositivi audio di input/output.  
   - Scelta del file dei filtri.  
   - Modalità **Pass-Through** o **Filtrato**.  
-- Elaborazione audio in **thread separato**, garantendo controllo in tempo reale senza blocchi.
+- Elaborazione audio in **thread separato**, garantendo controllo in tempo reale.
 
 ---
 
