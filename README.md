@@ -58,6 +58,8 @@ pip install -r requirement.txt
      - **Pass-Through**: audio diretto senza filtraggio  
      - **Filtrato**: applica i filtri IIR calcolati da REW  
    - Premere **Stop** per terminare lo stream in sicurezza
-
-
+---------------
+Acknowledgement
+---------------
+This project uses [real-time-iir-filter]([https://github.com/berndporr/py-iir-filter](https://github.com/what-in-the-nim/real-time-iir-filter/tree/main)).
 
