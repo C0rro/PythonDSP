@@ -8,7 +8,6 @@ class DimensionError(Exception):
     """Raise when the dimension of signals not as expected"""
     pass
 
-
 @dataclass
 class IIR:
     """

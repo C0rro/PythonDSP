@@ -108,7 +108,7 @@ start_page = """
        </select><br><br>
 
       <label>Buffer Size (chunk):</label><br>
-      <input type="number" name="chunk" value="1024" min="128" required><br><br>
+      <input type="number" name="chunk" value="256" min="128" required><br><br>
 
       <label>Sample Rate (Hz):</label><br>
       <input type="number" name="rate" value="48000" min="8000" required><br><br>
