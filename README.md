@@ -61,5 +61,5 @@ pip install -r requirement.txt
 ---------------
 Acknowledgement
 ---------------
-This project uses [real-time-iir-filter]([https://github.com/berndporr/py-iir-filter](https://github.com/what-in-the-nim/real-time-iir-filter/tree/main)).
+This project uses [https://github.com/berndporr/py-iir-filter](https://github.com/what-in-the-nim/real-time-iir-filter/tree/main).
 
