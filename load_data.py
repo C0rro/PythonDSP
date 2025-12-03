@@ -10,7 +10,7 @@ def get_files_name():
     return files
 
 # Funzione per caricare e formattare dati dal filtro
-def loadData(filter_name):
+def load_data(filter_name):
     nome_file = "Filtri/" + filter_name 
     dati_clean = []
     with open(nome_file, "r") as f:

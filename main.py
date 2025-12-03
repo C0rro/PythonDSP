@@ -2,23 +2,23 @@ import time
 import numpy as np
 import pyaudio
 import threading
-from loadData import loadData, get_files_name
+from load_data import load_data, get_files_name
 from flask import Flask, render_template_string, request, redirect, url_for
-from filterCreation import build_sos
+from filter_creation import build_sos
 from iir import IIR
-from idAudio import stampa_id
+from id_audio import stampa_id
 
 def inizializzo_filtri(file_name):
 
     global rate
 
     # Carico i dati del filtro
-    filter_data = loadData(file_name)
+    filter_data = load_data(file_name)
 
-    #Creo oggetto IIR
+    # Creo oggetto IIR
     iir_stereo = IIR(2, rate)
 
-    #aggiungo filtri sos a IIR
+    # aggiungo filtri sos a IIR
     build_sos(filter_data, iir_stereo)
     return iir_stereo
 
@@ -37,20 +37,20 @@ def apertura_stream_audio(id_in, id_out, chunk, rate):
     
 
 def funzione_pass_through(stream, chunk):
-    #carico dati sul buffer
+    # carico dati sul buffer
     data = stream.read(chunk, exception_on_overflow=False)
-    # Scriv sullo stream
+    # Scrivo sullo stream
     stream.write(data)
 
 def funzione_filtrata(stream, chunk, iir_stereo):
-    #carico dati sul buffer
+    # carico dati sul buffer
     data_bytes = stream.read(chunk, exception_on_overflow=False)
 
     # Converto in float32
     data_array = np.frombuffer(data_bytes, dtype=np.int32).reshape(-1, 2).astype(np.float32)
 
     filtered_audio = iir_stereo.filter(data_array)
-    # Scriv sullo stream
+    # Scrivo sullo stream
     stream.write(filtered_audio.astype(np.int32).tobytes())
 
 
